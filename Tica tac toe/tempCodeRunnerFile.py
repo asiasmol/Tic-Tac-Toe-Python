@@ -1,1 +1,1 @@
-buttons[x]
+window.after(1000

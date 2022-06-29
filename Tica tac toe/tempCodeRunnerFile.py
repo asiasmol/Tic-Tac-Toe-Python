@@ -1,1 +1,1 @@
-kotek
+buttons[x]

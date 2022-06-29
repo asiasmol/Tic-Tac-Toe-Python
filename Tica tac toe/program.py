@@ -1,13 +1,18 @@
+from cProfile import label
+from cgitb import reset
 from random import random
+from time import sleep
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
+from turtle import bgpic
 from PIL import ImageTk, Image
 import random
 
 window = Tk()
 window.title("Tic-Tac-Toe")
 window.geometry('400x500')
+window.maxsize(400, 500)
 bg = ImageTk.PhotoImage(Image.open('Menu.png'))
 X_pic = ImageTk.PhotoImage(Image.open('X.png'))
 O_pic = ImageTk.PhotoImage(Image.open('O.png'))
@@ -15,6 +20,13 @@ player_pic = ImageTk.PhotoImage(Image.open('playervsplayer.png'))
 pvsc_pic = ImageTk.PhotoImage(Image.open('playervscomputer.png'))
 cvsc_pic = ImageTk.PhotoImage(Image.open('computervscomputer.png'))
 exit_pic = ImageTk.PhotoImage(Image.open('exit.png'))
+wojtek = ImageTk.PhotoImage(Image.open('wojte.png'))
+Oturn = ImageTk.PhotoImage(Image.open('Oturn.png'))
+Xturn = ImageTk.PhotoImage(Image.open('Xturn.png'))
+resetpic = ImageTk.PhotoImage(Image.open('reset.png'))
+returnpic = ImageTk.PhotoImage(Image.open('return.png'))
+owin = ImageTk.PhotoImage(Image.open('Owin.png'))
+xwin = ImageTk.PhotoImage(Image.open('Xwin.png'))
 witch_player = 0
 player = ['O', 'X']
 tura = 0
@@ -26,79 +38,87 @@ def clean():
 
 
 def wpisywanie(r, c, i):
-    if r == 1 and c == 1:
+    if r == 0.226 and c == 0.25:
         buttons[0] = player[i]
-    elif r == 1 and c == 2:
+    elif r == 0.5 and c == 0.25:
         buttons[1] = player[i]
-    elif r == 1 and c == 3:
+    elif r == 0.776 and c == 0.25:
         buttons[2] = player[i]
-    elif r == 2 and c == 1:
+    elif r == 0.226 and c == 0.5:
         buttons[3] = player[i]
-    elif r == 2 and c == 2:
+    elif r == 0.5 and c == 0.5:
         buttons[4] = player[i]
-    elif r == 2 and c == 3:
+    elif r == 0.776 and c == 0.5:
         buttons[5] = player[i]
-    elif r == 3 and c == 1:
+    elif r == 0.226 and c == 0.75:
         buttons[6] = player[i]
-    elif r == 3 and c == 2:
+    elif r == 0.5 and c == 0.75:
         buttons[7] = player[i]
-    elif r == 3 and c == 3:
+    elif r == 0.776 and c == 0.75:
         buttons[8] = player[i]
 
 
 def konwert_buttons_to_clik(x):
     if x == 0:
-        return(1, 1)
+        return(0.226, 0.25)
     elif x == 1:
-        return(1, 2)
+        return(0.5, 0.25)
     elif x == 2:
-        return(1, 3)
+        return(0.776, 0.25)
     elif x == 3:
-        return(2, 1)
+        return(0.226, 0.5)
     elif x == 4:
-        return(2, 2)
+        return(0.5, 0.5)
     elif x == 5:
-        return(2, 3)
+        return(0.776, 0.5)
     elif x == 6:
-        return(3, 1)
+        return(0.226, 0.75)
     elif x == 7:
-        return(3, 2)
+        return(0.5, 0.75)
     elif x == 8:
-        return(3, 3)
+        return(0.776, 0.75)
 
 
 def Win(Player):
     clean()
+    global tura
+    if player == 1:
+        turn = xwin
+    else:
+        turn = owin
+    l = Label(window, image=bg)
+    l.place(x=0, y=0, relwidth=1, relheigh=1)
     if Player == 10:
         l = Label(window, text='Draw', font=('console', 20), justify=CENTER)
         l.pack()
     else:
-        Label(window, text=(player[Player]+'Win'),
-              font=('console', 20)).grid(row=0, column=2)
-    b = Button(text='Reset', padx=50, pady=20, justify=CENTER, command=menu)
+        l = Label(window, image=turn,
+                  font=('console', 20))
+        l.pack()
+    b = Button(image=resetpic, padx=50, pady=20, justify=CENTER, command=menu)
     b.pack()
     return 1
 
 
 def chek_win(i):
     # Horizontal winning condition
-    if(buttons[0] == buttons[1] and buttons[1] == buttons[2] and buttons[1] != None):
+    if(buttons[0] == buttons[1] and buttons[1] == buttons[2] and buttons[1] != 0):
         return Win(i)
-    elif(buttons[3] == buttons[4] and buttons[4] == buttons[5] and buttons[4] != None):
+    elif(buttons[3] == buttons[4] and buttons[4] == buttons[5] and buttons[4] != 0):
         return Win(i)
-    elif(buttons[6] == buttons[7] and buttons[8] == buttons[7] and buttons[7] != None):
+    elif(buttons[6] == buttons[7] and buttons[8] == buttons[7] and buttons[7] != 0):
         return Win(i)
     # Vertical Winning Condition
-    elif(buttons[0] == buttons[3] and buttons[3] == buttons[6] and buttons[0] != None):
+    elif(buttons[0] == buttons[3] and buttons[3] == buttons[6] and buttons[0] != 0):
         return Win(i)
-    elif(buttons[1] == buttons[4] and buttons[4] == buttons[7] and buttons[1] != None):
+    elif(buttons[1] == buttons[4] and buttons[4] == buttons[7] and buttons[1] != 0):
         return Win(i)
-    elif(buttons[2] == buttons[5] and buttons[5] == buttons[8] and buttons[2] != None):
+    elif(buttons[2] == buttons[5] and buttons[5] == buttons[8] and buttons[2] != 0):
         return Win(i)
     # Diagonal Winning Condition
-    elif(buttons[0] == buttons[4] and buttons[4] == buttons[8] and buttons[4] != None):
+    elif(buttons[0] == buttons[4] and buttons[4] == buttons[8] and buttons[4] != 0):
         return Win(i)
-    elif(buttons[2] == buttons[4] and buttons[4] == buttons[6] and buttons[4] != None):
+    elif(buttons[2] == buttons[4] and buttons[4] == buttons[6] and buttons[4] != 0):
         return Win(i)
     # Match Tie or Draw Condition
     elif tura == 9:
@@ -111,57 +131,81 @@ def clik_action(r, c):
     if tura % 2 == 0:
         i = 0
         pic = O_pic
+        turn = Xturn
     else:
         i = 1
         pic = X_pic
+        turn = Oturn
 
-    Label(window, text=(player[i-1]+" Turn"),
-          font=('consolas', 20)).grid(row=0, column=2)
-    Button(image=pic, text=player[i], padx=45, pady=50).grid(row=r, column=c)
+    l = Label(window, image=(turn),
+              font=('consolas', 20))
+    l.pack()
+    l.place(relx=0.5, rely=0, anchor=N)
+    b = Button(image=pic, text=player[i], padx=45, pady=50)
+    b.configure(image=pic)
+    b.pack()
+    b.place(relx=r, rely=c, anchor=CENTER)
     tura += 1
     wpisywanie(r, c, i)
     x = chek_win(i)
-    print(x)
     if x != 1:
-        print(witch_player)
-
         if witch_player == 1 and tura % 2 != 0 and tura < 10:
             pick_computer_easy()
         elif witch_player == 2 and tura % 2 != 0 and tura < 10:
             pick_computer_normal()
 
-    print(buttons)
-
 
 def button():
-    buttons[0] = Button(window, padx=50, pady=50,
-                        command=lambda: clik_action(1, 1)).grid(row=1, column=1)
-    buttons[1] = Button(window, padx=50, pady=50,
-                        command=lambda: clik_action(1, 2)).grid(row=1, column=2)
-    buttons[2] = Button(window, padx=50, pady=50,
-                        command=lambda: clik_action(1, 3)).grid(row=1, column=3)
-    buttons[3] = Button(window, padx=50, pady=50,
-                        command=lambda: clik_action(2, 1)).grid(row=2, column=1)
-    buttons[4] = Button(window, padx=50, pady=50,
-                        command=lambda: clik_action(2, 2)).grid(row=2, column=2)
-    buttons[5] = Button(window, padx=50, pady=50,
-                        command=lambda: clik_action(2, 3)).grid(row=2, column=3)
-    buttons[6] = Button(window, padx=50, pady=50,
-                        command=lambda: clik_action(3, 1)).grid(row=3, column=1)
-    buttons[7] = Button(window, padx=50, pady=50,
-                        command=lambda: clik_action(3, 2)).grid(row=3, column=2)
-    buttons[8] = Button(window, padx=50, pady=50,
-                        command=lambda: clik_action(3, 3)).grid(row=3, column=3)
+    buttons0 = Button(window, padx=50, pady=50,
+                      command=lambda: clik_action(0.226, 0.25), background="#FF9900")
+    buttons0.pack()
+    buttons0.place(relx=0.226, rely=0.25, anchor=CENTER)
+    buttons1 = Button(window, padx=50, pady=50,
+                      command=lambda: clik_action(0.5, 0.25), background="#FF9900")
+    buttons1.pack()
+    buttons1.place(relx=0.5, rely=0.25, anchor=CENTER)
+    buttons2 = Button(window, padx=50, pady=50, command=lambda: clik_action(
+        0.776, 0.25), background="#FF9900")
+    buttons2.pack()
+    buttons2.place(relx=0.776, rely=0.25, anchor=CENTER)
+    buttons3 = Button(window, padx=50, pady=50, command=lambda: clik_action(
+        0.226, 0.5), background="#FF9900")
+    buttons3.pack()
+    buttons3.place(relx=0.226, rely=0.5, anchor=CENTER)
+    buttons4 = Button(window, padx=50, pady=50,
+                      command=lambda: clik_action(0.5, 0.5), background="#FF9900")
+    buttons4.pack()
+    buttons4.place(relx=0.5, rely=0.5, anchor=CENTER)
+    buttons5 = Button(window, padx=50, pady=50,
+                      command=lambda: clik_action(0.776, 0.5), background="#FF9900")
+    buttons5.pack()
+    buttons5.place(relx=0.776, rely=0.5, anchor=CENTER)
+    buttons6 = Button(window, padx=50, pady=50, command=lambda: clik_action(
+        0.226, 0.75), background="#FF9900")
+    buttons6.pack()
+    buttons6.place(relx=0.226, rely=0.75, anchor=CENTER)
+    buttons7 = Button(window, padx=50, pady=50,
+                      command=lambda: clik_action(0.5, 0.75), background="#FF9900")
+    buttons7.pack()
+    buttons7.place(relx=0.5, rely=0.75, anchor=CENTER)
+    buttons8 = Button(window, padx=50, pady=50,
+                      command=lambda: clik_action(0.776, 0.75), background="#FF9900")
+    buttons8.pack()
+    buttons8.place(relx=0.776, rely=0.75, anchor=CENTER)
 
 
 def Player_vs_player():
     clean()
-    Label(window, text='O Turn', font=('console', 20)).grid(row=0, column=2)
+    l = Label(window, image=bg)
+    l.place(x=0, y=0, relwidth=1, relheigh=1)
+    l1 = Label(window, image=Oturn, font=('console', 20))
+    l1.pack()
     button()
 
 
 def menu():
     clean()
+
     l = Label(window, image=bg)
     l.place(x=0, y=0, relwidth=1, relheigh=1)
     global buttons
@@ -200,14 +244,15 @@ def play_vs_ai():
     button.pack(padx=10, pady=20)
     button.place(relx=0.5, rely=0.2, anchor=CENTER)
 
-    button1 = Button(window, text='Normal', padx=35, pady=20)
+    button1 = Button(window, text='Normal', padx=35,
+                     pady=20, command=play_normal)
     button1.pack(padx=10, pady=20)
     button1.place(relx=0.5, rely=0.4, anchor=CENTER)
 
-    button2 = Button(window, text='Hard', padx=43, pady=20)
+    button2 = Button(window, text='Hard', padx=43, pady=20, command=play_hard)
     button2.pack(padx=10, pady=20)
     button2.place(relx=0.5, rely=0.6, anchor=CENTER)
-    button3 = Button(window, text='Return', padx=40,
+    button3 = Button(window, image=returnpic, padx=40,
                      pady=20, command=menu)
     button3.pack(padx=10, pady=20)
     button3.place(relx=0.5, rely=0.8, anchor=CENTER)
@@ -225,41 +270,102 @@ def play_normal():
     Player_vs_player()
 
 
-def pick_computer_normal():
+def play_hard():
+    global witch_player
+    witch_player = 3
+    Player_vs_player()
+
+
+def pick_computer_hard():
     pass
 
 
+def pick_computer_normal():
+    for i in ['X', 'O']:
+        counter = 0
+        # poziomy
+        for z in (0, 3, 6):
+            counter = 0
+            for x in range(z, z+3):
+                if buttons[x] == i:
+                    counter += 1
+
+            if counter == 2:
+                for x in range(z, z+3):
+                    if buttons[x] == 0:
+                        clik_action(konwert_buttons_to_clik(
+                            x)[0], konwert_buttons_to_clik(x)[1])
+                        return 0
+        # piony
+        counter = 0
+        for z in range(3):
+            counter = 0
+            for x in (z, z+3, z+6):
+                if buttons[x] == i:
+                    counter += 1
+            if counter == 2:
+                for x in (z, z+3, z+6):
+                    if buttons[x] == 0:
+                        clik_action(konwert_buttons_to_clik(
+                            x)[0], konwert_buttons_to_clik(x)[1])
+                        return 0
+        # skosy
+        counter = 0
+        for x in (0, 4, 8):
+            if buttons[x] == i:
+                counter += 1
+        if counter == 2:
+            for x in (0, 4, 8):
+                if buttons[x] == 0:
+                    clik_action(konwert_buttons_to_clik(
+                        x)[0], konwert_buttons_to_clik(x)[1])
+                    return 0
+        counter = 0
+        for x in (2, 4, 6):
+            if buttons[x] == i:
+                counter += 1
+        if counter == 2:
+            for x in (2, 4, 6):
+                if buttons[x] == 0:
+                    clik_action(konwert_buttons_to_clik(
+                        x)[0], konwert_buttons_to_clik(x)[1])
+                    return 0
+
+        if counter < 2 and i == 'O':
+            pick_computer_easy()
+            return 0
+
+
 def pick_computer_easy():
-    print('kotek')
     while True:
         random_choice = random.randint(0, 8)
-        print(random_choice)
-        if random_choice == 0 and buttons[0] == None:
-            clik_action(1, 1)
+
+        if random_choice == 0 and buttons[0] == 0:
+            clik_action(0.226, 0.25)
             break
-        elif random_choice == 1 and buttons[1] == None:
-            clik_action(1, 2)
+        elif random_choice == 1 and buttons[1] == 0:
+            clik_action(0.5, 0.25)
             break
-        elif random_choice == 2 and buttons[2] == None:
-            clik_action(1, 3)
+        elif random_choice == 2 and buttons[2] == 0:
+            clik_action(0.776, 0.25)
             break
-        elif random_choice == 3 and buttons[3] == None:
-            clik_action(2, 1)
+        elif random_choice == 3 and buttons[3] == 0:
+            clik_action(0.226, 0.5)
             break
-        elif random_choice == 4 and buttons[4] == None:
-            clik_action(2, 2)
+        elif random_choice == 4 and buttons[4] == 0:
+            clik_action(0.5, 0.5)
             break
-        elif random_choice == 5 and buttons[5] == None:
-            clik_action(2, 3)
+        elif random_choice == 5 and buttons[5] == 0:
+            clik_action(0.776, 0.5)
             break
-        elif random_choice == 6 and buttons[6] == None:
-            clik_action(3, 1)
+        elif random_choice == 6 and buttons[6] == 0:
+            clik_action(0.226, 0.75)
             break
-        elif random_choice == 7 and buttons[7] == None:
-            clik_action(3, 2)
+        elif random_choice == 7 and buttons[7] == 0:
+            clik_action(0.5, 0.75)
             break
-        elif random_choice == 8 and buttons[8] == None:
-            clik_action(3, 3)
+        elif random_choice == 8 and buttons[8] == 0:
+            clik_action(0.776, 0.75)
             break
 
 

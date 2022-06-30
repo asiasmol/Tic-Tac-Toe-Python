@@ -32,9 +32,12 @@ hard = ImageTk.PhotoImage(Image.open('p/hard.png'))
 piotrek = ImageTk.PhotoImage(Image.open('p/piotrek.png'))
 ja = ImageTk.PhotoImage(Image.open('p/ja.png'))
 asia = ImageTk.PhotoImage(Image.open('p/asia.png'))
+cg = ImageTk.PhotoImage(Image.open('p/computergame.png'))
+playerone = ImageTk.PhotoImage(Image.open('p/playerone.png'))
+playerotwo = ImageTk.PhotoImage(Image.open('p/playertwo.png'))
 
 
-witch_player = 0
+which_player = 0
 player = ['O', 'X']
 tura = 1
 
@@ -101,7 +104,7 @@ def konwert_buttons_to_clik(x):
 def Win(Player):
     clean()
     global tura
-    if witch_player == 3 or witch_player == 2:
+    if which_player != 0:
         if player == 1:
             turn = owin
         else:
@@ -149,9 +152,12 @@ def chek_win(i):
     elif(buttons[2] == buttons[4] and buttons[4] == buttons[6] and buttons[4] != 0):
         return Win(i)
     # Match Tie or Draw Condition
-    elif tura == 9:
+    elif tura == 9 and (which_player == 2 or which_player == 1 or which_player == 0):
         return Win(10)
         # Game=Draw
+    elif tura == 10:
+        print('koktek')
+        return Win(10)
     else:
         return 2
 
@@ -162,19 +168,26 @@ def clik_action(r, c):
         i = 0
         pic = O_pic
         turn = Xturn
+        if which_player == 0:
+            turn = playerotwo
     else:
         i = 1
         pic = X_pic
         turn = Oturn
+        if which_player == 0:
+            turn = playerone
+    if which_player == 4:
+        turn = cg
+
     l = Label(window, image=(turn),
               font=('consolas', 20))
+
     l.pack()
     l.place(relx=0.5, rely=0, anchor=N)
-    if witch_player == 3 and tura == 1:
+    if which_player == 3 and tura == 1:
         r = 0.72
         c = 0.68
-    elif witch_player == 4:
-        window.after(1000, pick_computer_normal)
+
     b = Button(image=pic, text=player[i], padx=45, pady=50)
     b.configure(image=pic)
     b.pack()
@@ -183,12 +196,15 @@ def clik_action(r, c):
     wpisywanie(r, c, i)
     x = chek_win(i)
     if x != 1:
-        if witch_player == 1 and tura % 2 != 0 and tura < 10:
+        if which_player == 1 and tura % 2 != 0 and tura < 10:
             window.after(1000, pick_computer_easy)
-        elif witch_player == 2 and tura % 2 != 0 and tura < 10:
+        elif which_player == 2 and tura % 2 != 0 and tura < 10:
             window.after(1000, pick_computer_normal)
-        if witch_player == 3 and tura % 2 != 0 and tura < 10:
+        elif which_player == 3 and tura % 2 != 0 and tura <= 10:
             window.after(1000, pick_computer_hard)
+        elif which_player == 4 and tura < 10:
+            window.after(1000, pick_computer_normal)
+    print(buttons)
 
 
 def button():
@@ -234,25 +250,30 @@ def play():
     clean()
     l = Label(window, image=bg)
     l.place(x=0, y=0, relwidth=1, relheigh=1)
-    m = Label(window, image=piotrek)
-    m.pack()
-    m.place(relx=0.23, rely=0, anchor=N)
-    e = Label(window, image=show_player(witch_player))
+    e = Label(window, image=show_player(which_player))
     e.pack()
     e.place(relx=0.77, rely=0, anchor=N)
+    m = Label(window, image=piotrek)
     l1 = Label(window, image=Oturn, font=('console', 20))
+    if which_player == 4:
+        m = Label(window, image=show_player(which_player))
+        l1 = Label(window, image=cg, font=('console', 20))
+    if which_player == 0:
+        l1 = Label(window, image=playerone, font=('console', 20))
+    m.pack()
+    m.place(relx=0.23, rely=0, anchor=N)
     l1.pack()
     button()
-    if witch_player == 3:
+    if which_player == 3:
         clik_action(5, 5)
-    if witch_player == 4:
+    if which_player == 4:
         clik_action(5, 5)
 
 
 def menu():
     clean()
-    global witch_player
-    witch_player = 0
+    global which_player
+    which_player = 0
 
     l = Label(window, image=bg)
     l.place(x=0, y=0, relwidth=1, relheigh=1)
@@ -310,30 +331,31 @@ def play_vs_ai():
 
 
 def play_easy():
-    global witch_player
-    witch_player = 1
+    global which_player
+    which_player = 1
     play()
 
 
 def play_normal():
-    global witch_player
-    witch_player = 2
+    global which_player
+    which_player = 2
     play()
 
 
 def play_hard():
-    global witch_player
-    witch_player = 3
+    global which_player
+    which_player = 3
     play()
 
 
 def play_aivsai():
-    global witch_player
-    witch_player = 4
+    global which_player
+    which_player = 4
     play()
 
 
 def pick_computer_hard():
+
     if tura == 3:
         if buttons[1] == 'O' or buttons[3] == 'O' or buttons[5] == 'O' or buttons[7] == 'O':
             clik_action(0.5, 0.5)
@@ -347,7 +369,7 @@ def pick_computer_hard():
         elif buttons[4] == 'O':
             clik_action(0.28, 0.32)
         return 0
-    if tura == 5:
+    elif tura == 5:
         if buttons[0] == 'O' and buttons[4] == 'X' and buttons[8] == 'X' and buttons[5] != 'O':
             clik_action(0.72, 0.32)
         elif buttons[0] == 'O' and buttons[4] == 'X' and buttons[8] == 'X' and buttons[5]:

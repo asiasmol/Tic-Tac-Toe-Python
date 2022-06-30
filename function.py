@@ -1,4 +1,4 @@
-from imagine import *
+
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
@@ -14,6 +14,7 @@ window.geometry('500x700')
 window.maxsize(500, 700)
 window.minsize(500, 700)
 
+from imagine import *
 
 which_play = 0
 player = ['O', 'X']

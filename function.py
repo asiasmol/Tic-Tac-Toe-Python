@@ -30,7 +30,7 @@ def Win(which_player):
     clean()
     global tura
     if which_play != 0:
-        if which_player == 1:
+        if which_player != 1:
             win_pic = owin
         else:
             win_pic = xwin
@@ -120,7 +120,7 @@ def clik_action(row, column):
     board_button.place(relx=row, rely=column, anchor=CENTER)
     tura += 1
     read_to_board(board, player[which_player], row, column)
-    win = chek_win(which_player-1)
+    win = chek_win(which_player)
     if win != True:
         if which_play == 1 and tura % 2 != 0 and tura < 10:
             window.after(1000, pick_computer_easy)
@@ -130,7 +130,6 @@ def clik_action(row, column):
             window.after(1000, pick_computer_hard)
         elif which_play == 4 and tura < 10:
             window.after(1000, pick_computer_normal)
-    print(board)
 
 
 def buttons():
